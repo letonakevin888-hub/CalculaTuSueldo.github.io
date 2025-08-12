@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Sueldo Completa</title>
+    <!-- Incluimos Tailwind CSS para el estilo y la adaptabilidad de la página -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e5e7eb;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Contenedor principal para centrar el contenido y mantener el título arriba -->
+    <div class="flex flex-col items-center min-h-screen">
+
+        <!-- Tu título en la parte superior -->
+        <header class="w-full max-w-2xl text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-indigo-700">Calcula Tus Beneficios</h1>
+        </header>
+
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl w-full max-w-2xl">
+            <h2 class="text-2xl font-bold text-gray-800 text-center mb-2">Calculadora de Sueldo</h2>
+            <p class="text-gray-600 text-center mb-8">Ingresa tus datos para calcular tu sueldo.</p>
+
+            <!-- Formulario con una cuadrícula de dos columnas -->
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+
+                <!-- Fila 1 -->
+                <div>
+                    <label for="sueldoBruto" class="block text-gray-700 font-semibold mb-2">Sueldo mensual bruto:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">S/ </span>
+                        <input type="number" id="sueldoBruto" placeholder="0.00" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="sistemaPensionario" class="block text-gray-700 font-semibold mb-2">Sistema Pensionario:</label>
+                    <select id="sistemaPensionario" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                        <option value="AFP">AFP</option>
+                        <option value="ONP">ONP</option>
+                    </select>
+                </div>
+
+                <!-- Fila 2 -->
+                <div>
+                    <label for="asignacionFamiliar" class="block text-gray-700 font-semibold mb-2">Asignación Familiar:</label>
+                    <select id="asignacionFamiliar" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                        <option value="No">No</option>
+                        <option value="Si">Sí</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="diasTrabajados" class="block text-gray-700 font-semibold mb-2">Días trabajados en el mes:</label>
+                    <input type="number" id="diasTrabajados" placeholder="0" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none" required>
+                </div>
+
+                <!-- Fila 3 -->
+                <div>
+                    <label for="diasNoTrabajados" class="block text-gray-700 font-semibold mb-2">Días no trabajados:</label>
+                    <input type="number" id="diasNoTrabajados" placeholder="0" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none" value="0">
+                </div>
+                <div>
+                    <label for="horasExtra25" class="block text-gray-700 font-semibold mb-2">Horas extras al 25%:</label>
+                    <input type="number" id="horasExtra25" placeholder="0" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none" value="0">
+                </div>
+
+                <!-- Fila 4 -->
+                <div>
+                    <label for="horasExtra35" class="block text-gray-700 font-semibold mb-2">Horas extras al 35%:</label>
+                    <input type="number" id="horasExtra35" placeholder="0" class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none" value="0">
+                </div>
+                <div>
+                    <label for="comisiones" class="block text-gray-700 font-semibold mb-2">Comisiones:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">S/ </span>
+                        <input type="number" id="comisiones" placeholder="0.00" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 outline-none" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón para procesar el cálculo -->
+            <button id="procesarBtn" class="w-full mt-8 bg-indigo-600 text-white font-bold text-lg py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-200 ease-in-out">
+                Calcular Sueldo
+            </button>
+
+            <!-- Área de resultados (inicialmente oculta) -->
+            <div id="resultado" class="mt-8 p-6 bg-gray-100 rounded-xl hidden text-center shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Resumen del Sueldo</h3>
+                <p class="text-gray-700 text-left mb-2"><span class="font-bold">Sueldo Bruto:</span> <span id="sueldoBrutoCalculado"></span></p>
+                <p class="text-gray-700 text-left mb-2"><span class="font-bold">Total Descuentos:</span> <span id="totalDescuentos"></span></p>
+                <p class="text-2xl font-extrabold text-green-600 mt-4" id="sueldoNetoMsg"></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- El script va al final del body para asegurar que el HTML se cargue primero -->
+    <script>
+        const procesarBtn = document.getElementById('procesarBtn');
+        const resultadoDiv = document.getElementById('resultado');
+
+        procesarBtn.addEventListener('click', () => {
+            // Obtenemos los valores de todos los campos
+            const sueldoBruto = parseFloat(document.getElementById('sueldoBruto').value) || 0;
+            const asignacionFamiliarSeleccion = document.getElementById('asignacionFamiliar').value;
+            const diasNoTrabajados = parseFloat(document.getElementById('diasNoTrabajados').value) || 0;
+            const horasExtra25 = parseFloat(document.getElementById('horasExtra25').value) || 0;
+            const horasExtra35 = parseFloat(document.getElementById('horasExtra35').value) || 0;
+            const sistemaPensionario = document.getElementById('sistemaPensionario').value;
+            const diasTrabajados = parseFloat(document.getElementById('diasTrabajados').value) || 0;
+            const comisiones = parseFloat(document.getElementById('comisiones').value) || 0;
+
+            // Constantes de la fórmula
+            const diasDelMes = 30; // Usado para el cálculo diario
+            const rmv = 1130; // Valor de la Remuneración Mínima Vital, usado en la fórmula de AF.
+
+            // 1. Calculo del sueldo por días trabajados
+            const sueldoDiario = sueldoBruto / diasDelMes;
+            const sueldoPorDias = sueldoDiario * (diasTrabajados - diasNoTrabajados);
+
+            // 2. Calculo de asignación familiar
+            const montoAsignacionFamiliar = (asignacionFamiliarSeleccion === 'Si') ? (rmv * 0.10) : 0;
+
+            // 3. Calculo de horas extras
+            const valorHora = sueldoDiario / 8;
+            const montoHorasExtra25 = Math.round(valorHora * 1.25 * horasExtra25 * 100) / 100;
+            const montoHorasExtra35 = Math.round(valorHora * 1.35 * horasExtra35 * 100) / 100;
+
+            // 4. Suma de ingresos (Sueldo Bruto calculado)
+            const totalIngresos = sueldoPorDias + montoAsignacionFamiliar + montoHorasExtra25 + montoHorasExtra35 + comisiones;
+
+            // 5. Calculo de descuentos (AFP u ONP)
+            let deduccionPension = 0;
+            if (sistemaPensionario === 'AFP') {
+                // Tasa de descuento de AFP según la fórmula (11.37%)
+                deduccionPension = totalIngresos * 0.1137;
+            } else if (sistemaPensionario === 'ONP') {
+                // Tasa de descuento de ONP según la fórmula (13%)
+                deduccionPension = totalIngresos * 0.13;
+            }
+
+            const totalDescuentos = deduccionPension;
+            
+            // 6. Calculo del sueldo neto
+            const sueldoNeto = Math.round((totalIngresos - totalDescuentos) * 100) / 100;
+
+            // Actualizamos el DOM con los resultados formateados
+            document.getElementById('sueldoBrutoCalculado').textContent = `S/ ${totalIngresos.toFixed(2)}`;
+            document.getElementById('totalDescuentos').textContent = `S/ ${totalDescuentos.toFixed(2)}`;
+            document.getElementById('sueldoNetoMsg').innerHTML = `Felicidades, tu sueldo neto a recibir es: <br><span class="text-4xl text-green-700">S/ ${sueldoNeto.toFixed(2)}</span>`;
+            
+            // Hacemos visible el área de resultados
+            resultadoDiv.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
